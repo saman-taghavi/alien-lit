@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.1.3
+
+[compare changes](https://github.com/saman-taghavi/alien-lit/compare/v1.1.2...v1.1.3)
+
+### 🏡 Chore
+
+- Trigger release workflow ([84c7644](https://github.com/saman-taghavi/alien-lit/commit/84c7644))
+
+### ❤️ Contributors
+
+- Saman-taghavi <taghavisni@gmail.com>
+
 ## v1.1.2
 
 [compare changes](https://github.com/saman-taghavi/alien-lit/compare/v1.1.1...v1.1.2)
