@@ -1,16 +1,17 @@
 # Performance Benchmark
 
-Reactivity libraries are only as fast as their rendering integrations. This page showcases a live performance comparison of `alien-lit` (fine-grained updates) versus standard component-wide Lit rendering.
+Reactivity libraries are only as fast as their rendering integrations. This page showcases a live performance comparison comparing:
+1. **`alien-lit`** (Fine-grained reactivity using `alien-signals`)
+2. **`@lit-labs/signals`** (Official Lit Labs signals integration using the TC39 signals proposal polyfill)
+3. **Standard Lit Element** (Component-wide updates)
 
 ---
 
-## The Bottleneck: Component-wide re-renders
+## Why alien-lit is faster
 
-In standard Lit, updating a component property triggers a full re-render of that component's template. If a component contains 1,000 sub-items or complex templates, Lit must re-evaluate all expressions in the template, even if only a single item changed.
+Both `alien-lit` and `@lit-labs/signals` provide fine-grained reactivity, meaning they avoid the bottleneck of standard Lit (re-rendering the entire parent component and evaluating templates for all 1,000 items).
 
-## The Solution: Fine-grained reactivity
-
-`alien-lit` bypasses component-wide template updates by setting up localized effects for each signal read. When a signal value changes, only the element that registered the dependency updates, completely leaving the parent component and other sibling elements untouched.
+However, `alien-lit` goes a step further by leveraging **`alien-signals`**, which is optimized for minimal memory allocation and faster dependency resolution compared to the standard TC39 proposal polyfill used by `@lit-labs/signals`. This results in a cleaner, faster reactive update loop.
 
 ---
 

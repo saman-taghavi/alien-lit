@@ -4,6 +4,9 @@ import { property, state } from 'lit/decorators.js'
 import { SignalWatcher } from '../../../src/watcher'
 import { SignalTrackingController } from '../../../src/controller'
 
+// Official Lit Signals Labs package
+import { Signal as LitLabSignal, SignalWatcher as LitLabSignalWatcher } from '@lit-labs/signals'
+
 // --- 1. SHARED STATE FOR COUNTER SHOWCASE ---
 const globalCount = signal(0)
 const globalDoubleCount = computed(() => globalCount() * 2)
@@ -65,7 +68,6 @@ customElements.define('showcase-watcher-counter', ShowcaseWatcherCounter)
 class ShowcaseControllerCounter extends LitElement {
   static styles = ShowcaseWatcherCounter.styles
 
-  // Explicit tracking using the controller
   private tracker = new SignalTrackingController(this, () => {
     globalCount() // Explicitly list dependency
   })
@@ -182,8 +184,9 @@ customElements.define('showcase-theme-panel', ShowcaseThemePanel)
 
 // --- 3. BENCHMARK SHOWCASE ---
 const gridSignals = Array.from({ length: 1000 }, () => signal(0))
+const litLabSignals = Array.from({ length: 1000 }, () => new LitLabSignal.State(0))
 
-// Fine-grained Cell component
+// 3.1. alien-lit Cell component
 class AlienCell extends SignalWatcher(LitElement) {
   static styles = css`
     :host {
@@ -219,6 +222,43 @@ class AlienCell extends SignalWatcher(LitElement) {
 customElements.define('alien-cell', AlienCell)
 
 
+// 3.2. @lit-labs/signals Cell component
+class LitLabCell extends LitLabSignalWatcher(LitElement) {
+  static styles = css`
+    :host {
+      display: block;
+    }
+    .cell {
+      padding: 4px;
+      font-size: 10px;
+      text-align: center;
+      background: var(--vp-c-bg-soft);
+      border: 1px solid var(--vp-c-divider);
+      border-radius: 3px;
+      font-family: monospace;
+      transition: background 0.1s;
+    }
+    .cell.active {
+      background: var(--vp-c-warning-1, #e6a23c);
+      color: var(--vp-c-neutral-inverse, #fff);
+      font-weight: bold;
+    }
+  `
+  @property({ type: Number }) index!: number
+
+  render() {
+    const val = litLabSignals[this.index]().get()
+    return html`
+      <div class="cell ${val > 0 ? 'active' : ''}">
+        ${val}
+      </div>
+    `
+  }
+}
+customElements.define('lit-lab-cell', LitLabCell)
+
+
+// 3.3. Main Benchmark showcase component
 class ShowcaseBenchmark extends LitElement {
   static styles = css`
     .benchmark-container {
@@ -252,8 +292,8 @@ class ShowcaseBenchmark extends LitElement {
     }
     .results {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
       margin-bottom: 1.5rem;
     }
     .result-card {
@@ -267,17 +307,17 @@ class ShowcaseBenchmark extends LitElement {
       margin-bottom: 0.5rem;
     }
     .time-val {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: bold;
       font-family: monospace;
       color: var(--vp-c-brand-1);
     }
     .grids-container {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 960px) {
       .grids-container {
         grid-template-columns: 1fr;
       }
@@ -291,7 +331,7 @@ class ShowcaseBenchmark extends LitElement {
       display: grid;
       grid-template-columns: repeat(20, 1fr);
       gap: 2px;
-      max-height: 200px;
+      max-height: 150px;
       overflow-y: auto;
       border: 1px solid var(--vp-c-divider);
       padding: 4px;
@@ -333,6 +373,9 @@ class ShowcaseBenchmark extends LitElement {
       width: 0%;
       transition: width 0.5s ease-out;
     }
+    .bar.lit-labs {
+      background: var(--vp-c-warning-1, #e6a23c);
+    }
     .bar.standard {
       background: #e06666;
     }
@@ -340,6 +383,7 @@ class ShowcaseBenchmark extends LitElement {
 
   @state() private running = false
   @state() private alienTime = 0
+  @state() private litLabTime = 0
   @state() private standardTime = 0
   @state() private currentStep = ''
   
@@ -349,22 +393,23 @@ class ShowcaseBenchmark extends LitElement {
   private async runBenchmark() {
     this.running = true
     this.alienTime = 0
+    this.litLabTime = 0
     this.standardTime = 0
 
     // Reset grid states
     gridSignals.forEach(s => s(0))
+    litLabSignals.forEach(s => s.set(0))
     this.standardValues = Array.from({ length: 1000 }, () => 0)
     await this.updateComplete
 
     const iterations = 500
     const targetIndex = 500 // Middle element
 
-    // 1. Benchmark alien-lit (fine-grained updates)
+    // 1. Benchmark alien-lit (fine-grained updates with alien-signals)
     this.currentStep = 'Benchmarking alien-lit...'
     const startAlien = performance.now()
     for (let i = 1; i <= iterations; i++) {
       gridSignals[targetIndex](i)
-      // Wait for rendering to flush
       await new Promise(resolve => requestAnimationFrame(resolve))
     }
     const endAlien = performance.now()
@@ -374,14 +419,27 @@ class ShowcaseBenchmark extends LitElement {
     gridSignals[targetIndex](0)
     await new Promise(resolve => requestAnimationFrame(resolve))
 
-    // 2. Benchmark standard Lit (component-wide update)
+    // 2. Benchmark @lit-labs/signals (fine-grained updates with TC39 signal-polyfill)
+    this.currentStep = 'Benchmarking @lit-labs/signals...'
+    const startLitLab = performance.now()
+    for (let i = 1; i <= iterations; i++) {
+      litLabSignals[targetIndex].set(i)
+      await new Promise(resolve => requestAnimationFrame(resolve))
+    }
+    const endLitLab = performance.now()
+    this.litLabTime = endLitLab - startLitLab
+
+    // Reset before running standard
+    litLabSignals[targetIndex].set(0)
+    await new Promise(resolve => requestAnimationFrame(resolve))
+
+    // 3. Benchmark standard Lit (component-wide update)
     this.currentStep = 'Benchmarking standard Lit...'
     const startStandard = performance.now()
     for (let i = 1; i <= iterations; i++) {
       const nextArr = [...this.standardValues]
       nextArr[targetIndex] = i
       this.standardValues = nextArr
-      // Wait for rendering to flush
       await new Promise(resolve => requestAnimationFrame(resolve))
     }
     const endStandard = performance.now()
@@ -392,8 +450,9 @@ class ShowcaseBenchmark extends LitElement {
   }
 
   render() {
-    const maxTime = Math.max(this.alienTime, this.standardTime, 1)
+    const maxTime = Math.max(this.alienTime, this.litLabTime, this.standardTime, 1)
     const alienPct = this.alienTime > 0 ? (this.alienTime / maxTime) * 100 : 0
+    const litLabPct = this.litLabTime > 0 ? (this.litLabTime / maxTime) * 100 : 0
     const standardPct = this.standardTime > 0 ? (this.standardTime / maxTime) * 100 : 0
 
     return html`
@@ -413,27 +472,40 @@ class ShowcaseBenchmark extends LitElement {
 
         <div class="results">
           <div class="result-card">
-            <h4>alien-lit (Fine-Grained)</h4>
+            <h4>alien-lit</h4>
             <div class="time-val">${this.alienTime.toFixed(1)} ms</div>
-            <small>Only 1 cell re-rendered</small>
+            <small>alien-signals</small>
           </div>
           <div class="result-card">
-            <h4>Standard Lit (Entire Grid)</h4>
+            <h4>@lit-labs/signals</h4>
+            <div class="time-val" style="color: var(--vp-c-warning-1, #e6a23c);">${this.litLabTime.toFixed(1)} ms</div>
+            <small>TC39 proposal polyfill</small>
+          </div>
+          <div class="result-card">
+            <h4>Standard Lit</h4>
             <div class="time-val" style="color: #e06666;">${this.standardTime.toFixed(1)} ms</div>
-            <small>Re-renders parent + all 1,000 cells</small>
+            <small>Re-renders entire grid</small>
           </div>
         </div>
 
-        ${(this.alienTime > 0 || this.standardTime > 0) ? html`
+        ${(this.alienTime > 0 || this.litLabTime > 0 || this.standardTime > 0) ? html`
           <div class="bar-comparison">
-            <h4>Rendering Overhead Comparison</h4>
+            <h4>Rendering Overhead Comparison (Lower is better)</h4>
             
             <div class="bar-wrapper">
               <div class="bar-label">
-                <span>alien-lit</span>
+                <span>alien-lit (alien-signals)</span>
                 <span>${this.alienTime.toFixed(1)} ms</span>
               </div>
               <div class="bar" style="width: ${alienPct}%"></div>
+            </div>
+
+            <div class="bar-wrapper">
+              <div class="bar-label">
+                <span>@lit-labs/signals (TC39 Polyfill)</span>
+                <span>${this.litLabTime.toFixed(1)} ms</span>
+              </div>
+              <div class="bar lit-labs" style="width: ${litLabPct}%"></div>
             </div>
 
             <div class="bar-wrapper">
@@ -445,8 +517,8 @@ class ShowcaseBenchmark extends LitElement {
             </div>
             
             <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.95;">
-              ${this.standardTime > this.alienTime ? html`
-                🎉 <strong>alien-lit</strong> is <strong>${(this.standardTime / this.alienTime).toFixed(1)}x faster</strong> because only the updated cell component updates its DOM!
+              ${this.litLabTime > this.alienTime ? html`
+                🎉 <strong>alien-lit</strong> is <strong>${(this.litLabTime / this.alienTime).toFixed(1)}x faster</strong> than the official <strong>@lit-labs/signals</strong> package, owing to the high-performance update scheduling and minimized runtime overhead of <code>alien-signals</code>!
               ` : ''}
             </p>
           </div>
@@ -458,6 +530,14 @@ class ShowcaseBenchmark extends LitElement {
             <div class="grid-view">
               ${Array.from({ length: 1000 }).map((_, i) => html`
                 <alien-cell .index=${i}></alien-cell>
+              `)}
+            </div>
+          </div>
+          <div>
+            <div class="grid-title">@lit-labs/signals Grid</div>
+            <div class="grid-view">
+              ${Array.from({ length: 1000 }).map((_, i) => html`
+                <lit-lab-cell .index=${i}></lit-lab-cell>
               `)}
             </div>
           </div>
