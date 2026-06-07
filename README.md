@@ -1,7 +1,10 @@
 # alien-lit 👽⚡
 
-[![npm version](https://img.shields.io/npm/v/alien-lit.svg)](https://npmjs.org/package/alien-lit)
-[![license](https://img.shields.io/npm/l/alien-lit.svg)](https://github.com/saman-taghavi/alien-lit)
+[![npm version](https://img.shields.io/npm/v/alien-lit?color=33cd56&logo=npm)](https://www.npmjs.com/package/alien-lit)
+[![npm downloads](https://img.shields.io/npm/dm/alien-lit?color=3b82f6&logo=npm)](https://www.npmjs.com/package/alien-lit)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/alien-lit?color=f43f5e&logo=rollup)](https://bundlephobia.com/package/alien-lit)
+[![build status](https://img.shields.io/github/actions/workflow/status/saman-taghavi/alien-lit/release.yml?branch=main&logo=github&label=build)](https://github.com/saman-taghavi/alien-lit/actions/workflows/release.yml)
+[![license](https://img.shields.io/github/license/saman-taghavi/alien-lit?color=7c3aed)](https://github.com/saman-taghavi/alien-lit/blob/main/LICENSE)
 
 Fine-grained reactive state for **Lit** powered by **alien-signals**.
 
@@ -134,4 +137,4 @@ By leveraging the ultra-lightweight `alien-signals` library, `alien-lit` is **~2
 
 ## License
 
-MIT License.
+[MIT License](LICENSE).
