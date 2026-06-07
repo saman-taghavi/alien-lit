@@ -1,8 +1,6 @@
 # SignalWatcher Mixin
 
-The `SignalWatcher` mixin adds automatic fine-grained reactive updates to any Lit `ReactiveElement` (like `LitElement`).
-
-It wraps the standard Lit update lifecycle, tracking any `alien-signals` read during the synchronous render pass and scheduling a component update when they change.
+A TypeScript class mixin that adds automatic, fine-grained reactive updates to any Lit `ReactiveElement` (such as `LitElement`) by intercepting its render lifecycle.
 
 ---
 
@@ -12,8 +10,23 @@ It wraps the standard Lit update lifecycle, tracking any `alien-signals` read du
 export function SignalWatcher<T extends Constructor<ReactiveElement>>(Base: T): T
 ```
 
-- **Arguments**: A base class extending `ReactiveElement` (e.g., `LitElement`).
-- **Returns**: A new class that automatically registers/deregisters dependency effects.
+* **Parameters**:
+  * `Base`: A class constructor extending Lit's `ReactiveElement` (like `LitElement`).
+* **Returns**:
+  * An enhanced class constructor equipped with auto-tracking features.
+
+---
+
+## How it works (Under the Hood)
+
+The mixin wraps Lit's internal update process by hooking into three primary lifecycle methods:
+
+1. **`performUpdate()`**:
+   When Lit schedules an update, `SignalWatcher` intercepts the call and executes `super.performUpdate()` inside an `alien-signals` `effect`. Any signal accessed during the synchronous execution of your `render()` method is automatically registered as a dependency.
+2. **`requestUpdate()`**:
+   If any of the tracked signals mutate in the future, the effect callback is fired, which automatically schedules a new update on the Lit element.
+3. **`connectedCallback()` & `disconnectedCallback()`**:
+   The active tracking effect is bound to the element's connection lifecycle. When the component is disconnected from the DOM, the effect is immediately disposed of to prevent memory leaks. Upon reconnection, a new update is requested to re-track dependencies.
 
 ---
 
@@ -25,19 +38,18 @@ import { LitElement, html } from 'lit'
 import { customElement } from 'lit/decorators.js'
 import { SignalWatcher } from 'alien-lit'
 
-// 1. Declare signals
-const count = signal(0)
-const doubleCount = computed(() => count() * 2)
+// Create state
+const firstName = signal('John')
+const lastName = signal('Doe')
+const fullName = computed(() => `${firstName()} ${lastName()}`)
 
-// 2. Wrap LitElement with the mixin
-@customElement('reactive-counter')
-export class ReactiveCounter extends SignalWatcher(LitElement) {
-  override render() {
+@customElement('user-profile')
+export class UserProfile extends SignalWatcher(LitElement) {
+  render() {
     return html`
       <div>
-        <p>Current count: ${count()}</p>
-        <p>Double count: ${doubleCount()}</p>
-        <button @click=${() => count(count() + 1)}>Increment</button>
+        <p>User: <strong>${fullName()}</strong></p>
+        <button @click=${() => firstName('Jane')}>Change First Name</button>
       </div>
     `
   }
@@ -46,20 +58,22 @@ export class ReactiveCounter extends SignalWatcher(LitElement) {
 
 ---
 
-## How it Works
+## Best Practices
 
-1. During `performUpdate`, `SignalWatcher` sets up an `alien-signals` `effect`.
-2. Any signal evaluated within this effect (e.g., inside your `render()` method) is registered as a dependency.
-3. If any dependency changes, `this.requestUpdate()` is automatically called to trigger the next Lit update cycle.
-4. When the component is disconnected (`disconnectedCallback`), the effect is disposed of automatically to avoid memory leaks.
+::: warning ⚠️ Avoid Infinite Update Loops
+Do **not** write to or mutate signals inside `render()`, `willUpdate()`, `update()`, or other synchronous lifecycle methods. Doing so will mutate dependencies that the render cycle is currently tracking, resulting in an infinite re-render loop.
+:::
+
+::: tip Keep Renders Pure
+Ensure your `render()` function remains a pure representation of your state. Do not perform side-effects inside it.
+:::
 
 ---
 
 ## Live Interactive Preview
 
-Below is a live instance of the `ReactiveCounter` element using `SignalWatcher`:
+Below is a live instance of a component using `SignalWatcher` (listening to a shared count signal):
 
 <ClientOnly>
   <showcase-watcher-counter></showcase-watcher-counter>
 </ClientOnly>
-
