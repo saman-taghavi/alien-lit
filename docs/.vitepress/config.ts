@@ -34,7 +34,7 @@ export default defineConfig({
       },
     ],
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/your-username/alien-lit' },
+      { icon: 'github', link: 'https://github.com/saman-taghavi/alien-lit' },
     ],
     footer: {
       message: 'Released under the MIT License.',
