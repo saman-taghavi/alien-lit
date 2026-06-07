@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.1.4
+
+[compare changes](https://github.com/saman-taghavi/alien-lit/compare/v1.1.3...v1.1.4)
+
+### 📖 Documentation
+
+- Remove live benchmark section ([e6aab3f](https://github.com/saman-taghavi/alien-lit/commit/e6aab3f))
+
+### ❤️ Contributors
+
+- Saman-taghavi <taghavisni@gmail.com>
+
 ## v1.1.3
 
 [compare changes](https://github.com/saman-taghavi/alien-lit/compare/v1.1.2...v1.1.3)
