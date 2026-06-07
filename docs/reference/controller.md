@@ -1,11 +1,6 @@
 # SignalTrackingController
 
-`SignalTrackingController` is a Lit `ReactiveController` that allows you to manually track specific `alien-signals` and request a host update when they change.
-
-This is highly useful when:
-- You want to declare dependencies explicitly.
-- You want to track signals outside the `render()` lifecycle (e.g., inside custom lifecycles, hooks, or side-effects).
-- You are building other custom controllers.
+A Lit `ReactiveController` that allows you to explicitly track specific signals and trigger updates on the host component when those signals mutate.
 
 ---
 
@@ -20,10 +15,28 @@ export class SignalTrackingController implements ReactiveController {
 }
 ```
 
-### Parameters
+* **Parameters**:
+  * `host`: The Lit host element (usually `this` inside your component class).
+  * `track`: A tracking callback function. Any signal read inside this function is registered as a dependency.
 
-- **`host`** (`ReactiveElement`): The host element (typically `this` in a Lit component). Registers the controller onto the element.
-- **`track`** (`() => void`): A function where you read/access any signals that should trigger a host update upon mutation.
+---
+
+## Why use the Controller instead of the Mixin?
+
+While `SignalWatcher` is the easiest way to handle reactivity automatically, the `SignalTrackingController` is preferred in the following scenarios:
+
+1. **Explicit Dependencies**: If you want to explicitly declare what signals a component is watching, rather than tracking everything read in the `render()` template.
+2. **Outside the Render Cycle**: If you need to trigger updates based on signals read in custom controllers, side-effects, or lifecycle methods (e.g. tracking inside a custom animation loop).
+3. **Third-Party Integrations**: If you are writing custom Lit controllers or integrations that need to handle their own signal-based reactivity.
+
+---
+
+## How it works (Under the Hood)
+
+1. The controller registers itself to the host Lit element using `host.addController(this)`.
+2. When the host connects to the DOM (`hostConnected`), the controller spawns an `effectScope` and registers an `effect` around the provided `track` function.
+3. When any signal accessed inside `track()` changes, the effect is triggered, which in turn calls `this.host.requestUpdate()`.
+4. When the host disconnects (`hostDisconnected`), the effect scope is destroyed and all subscription handlers are disposed.
 
 ---
 
@@ -35,22 +48,22 @@ import { LitElement, html } from 'lit'
 import { customElement } from 'lit/decorators.js'
 import { SignalTrackingController } from 'alien-lit'
 
-const theme = signal('dark')
+const userRole = signal('guest')
 
-@customElement('themed-box')
-export class ThemedBox extends LitElement {
-  // Explicitly track the 'theme' signal
-  private themeTracker = new SignalTrackingController(this, () => {
-    theme() // Accessing the signal registers it as a dependency
+@customElement('admin-panel')
+export class AdminPanel extends LitElement {
+  // Explicitly subscribe to changes in the 'userRole' signal
+  private roleTracker = new SignalTrackingController(this, () => {
+    userRole() // Accessing the signal registers it as a dependency
   })
 
   override render() {
     return html`
-      <div class="box box-${theme()}">
-        <p>The current theme is ${theme()}</p>
-        <button @click=${() => theme(theme() === 'dark' ? 'light' : 'dark')}>
-          Toggle Theme
-        </button>
+      <div>
+        <p>Current Role: ${userRole()}</p>
+        ${userRole() === 'admin' 
+          ? html`<button>Manage Users</button>` 
+          : html`<span>Access Denied</span>`}
       </div>
     `
   }
@@ -59,20 +72,10 @@ export class ThemedBox extends LitElement {
 
 ---
 
-## How it Works
-
-1. The controller attaches to the host element via `host.addController(this)`.
-2. When the host connects to the DOM (`hostConnected`), the controller runs the `track` function inside an `effectScope` and `effect`.
-3. Whenever a signal read inside the `track` function changes, the effect fires and calls `host.requestUpdate()`.
-4. When the host disconnects (`hostDisconnected`), the effect scope is automatically disposed of, clean up all subscription handlers.
-
----
-
 ## Live Interactive Preview
 
-Below is a live instance of the component using `SignalTrackingController` (observing the same shared count signal):
+Below is a live instance of a component using `SignalTrackingController` (observing the shared count signal):
 
 <ClientOnly>
   <showcase-controller-counter></showcase-controller-counter>
 </ClientOnly>
-
