@@ -1,12 +1,12 @@
-# Theming Showcase
+# Dynamic Theming Showcase
 
-This showcase demonstrates how to implement a global app theme toggle using a simple signal store, and consume it using either `SignalWatcher` or `SignalTrackingController`.
+This showcase demonstrates how to build a global, reactive theme toggle store and consume it in Lit components. We will use `SignalWatcher` for UI styling updates and `SignalTrackingController` for side-effects (like syncing the theme to the `document.body` class list).
 
 ---
 
-## 1. Defining the Theme Store
+## 🎨 1. The Theme Store
 
-Create a dedicated state file `themeStore.ts`:
+We declare a typed `currentTheme` signal and a `toggleTheme()` mutator function in a separate store file:
 
 ```typescript
 import { signal } from 'alien-signals'
@@ -27,9 +27,9 @@ export function toggleTheme() {
 
 ---
 
-## 2. Using SignalWatcher
+## 🖥️ 2. UI Component (SignalWatcher)
 
-With `SignalWatcher`, the component automatically re-renders whenever `currentTheme` changes:
+The `ThemedPanel` component uses the `SignalWatcher` mixin to automatically re-evaluate its CSS classes whenever the theme changes, ensuring styling updates are rendered instantly:
 
 ```typescript
 import { LitElement, html, css } from 'lit'
@@ -41,20 +41,22 @@ import { currentTheme, toggleTheme } from './themeStore'
 export class ThemedPanel extends SignalWatcher(LitElement) {
   static styles = css`
     .panel {
-      padding: 1rem;
-      border-radius: 8px;
+      padding: 1.5rem;
+      border-radius: 12px;
       transition: background-color 0.3s, color 0.3s;
+      border: 1px solid var(--vp-c-divider);
     }
-    .dark { background: #222; color: #fff; }
-    .light { background: #f0f0f0; color: #000; }
-    .synthwave { background: #2b1055; color: #ff007f; }
+    .dark      { background: #1e1e24; color: #f5f5f7; }
+    .light     { background: #fafafa; color: #1a1a1a; }
+    .synthwave { background: #2b0f54; color: #ff7df9; }
   `
 
   override render() {
     const theme = currentTheme()
     return html`
       <div class="panel ${theme}">
-        <h2>Welcome to the ${theme} zone!</h2>
+        <h2>Active Theme: ${theme.toUpperCase()}</h2>
+        <p>The panel styles react instantly to changes in the theme signal.</p>
         <button @click=${toggleTheme}>Cycle Theme</button>
       </div>
     `
@@ -64,9 +66,9 @@ export class ThemedPanel extends SignalWatcher(LitElement) {
 
 ---
 
-## 3. Using SignalTrackingController
+## 🔄 3. Side-Effects (SignalTrackingController)
 
-With `SignalTrackingController`, you explicitly subscribe to the theme change. This is useful for side effects, such as updating a body attribute or running custom animations:
+If you need to perform side-effects outside of rendering templates (e.g. syncing state to external DOM APIs, local storage, or telemetry), `SignalTrackingController` is the perfect tool:
 
 ```typescript
 import { LitElement, html } from 'lit'
@@ -83,7 +85,7 @@ export class ThemeBodySync extends LitElement {
   })
 
   override render() {
-    return html`<p>Syncing theme to document body...</p>`
+    return html`<p>Syncing active theme to document body class...</p>`
   }
 }
 ```
@@ -92,9 +94,8 @@ export class ThemeBodySync extends LitElement {
 
 ## Live Interactive Preview
 
-Try toggling the global theme store below to see it change in real-time. Notice how the component styling reacts immediately:
+Try toggling the global theme store below to see the CSS styling adapt immediately in real-time:
 
 <ClientOnly>
   <showcase-theme-panel></showcase-theme-panel>
 </ClientOnly>
-
