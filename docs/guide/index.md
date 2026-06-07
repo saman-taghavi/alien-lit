@@ -1,14 +1,29 @@
 # Getting Started
 
-`alien-lit` provides a seamless integration between the hyper-performance [alien-signals](https://github.com/stackblitz/alien-signals) reactivity library and [Lit](https://lit.dev/) Web Components.
+`alien-lit` is a lightweight integration that bridges the hyper-performance of [alien-signals](https://github.com/stackblitz/alien-signals) with the flexibility of [Lit](https://lit.dev/) Web Components.
 
-It offers fine-grained reactivity, allowing components to automatically update only when the signals they depend on are mutated.
+It enables fine-grained reactivity, meaning your components automatically subscribe to state changes and re-render only when the exact signals they consume are updated.
+
+---
+
+## The Problem
+
+In a traditional Lit component:
+1. **Component-wide re-renders**: Updating a property forces the entire component's template to re-evaluate, even if only a tiny node in the DOM changed.
+2. **State Sharing**: Sharing state across components often requires event bubbles, global context providers, or heavy state managers which clutter your code with boilerplate.
+
+## The Solution
+
+`alien-lit` extracts your state into independent, highly optimized reactive primitives called **Signals**. Components read these signals during their render phase, automatically subscribing to updates. When a signal is mutated:
+* The subscription is triggered.
+* An update is scheduled.
+* **Only** the affected components re-render.
 
 ---
 
 ## Installation
 
-Install `alien-lit` along with its peer dependencies `alien-signals` and `lit`:
+Install `alien-lit` along with its peer dependencies:
 
 ::: code-group
 
@@ -28,13 +43,39 @@ yarn add alien-lit alien-signals lit
 
 ---
 
-## Basic Concept
+## Quick Start (Zero Boilerplate)
 
-With standard LitElement, you manage state via properties/attributes or custom events. While clean, this can lead to prop-drilling or component-wide updates.
+The easiest way to use `alien-lit` is with the `SignalWatcher` mixin. Any signal read during the synchronous render cycle is automatically tracked, and the lifecycle is managed for you.
 
-`alien-lit` lets you extract state into independent, lightweight reactive primitives called **Signals**. Components then observe these signals and update reactively.
+```typescript
+import { signal } from 'alien-signals'
+import { LitElement, html } from 'lit'
+import { customElement } from 'lit/decorators.js'
+import { SignalWatcher } from 'alien-lit'
 
-We provide two integration methods depending on your preferences:
+// 1. Declare your signal state (outside the UI tree)
+const count = signal(0)
 
-1. **[SignalWatcher](/reference/watcher)**: Automatic, zero-boilerplate tracking.
-2. **[SignalTrackingController](/reference/controller)**: Explicit, manual dependency tracking.
+// 2. Wrap your component with SignalWatcher
+@customElement('simple-counter')
+export class SimpleCounter extends SignalWatcher(LitElement) {
+  render() {
+    return html`
+      <div>
+        <p>Count: ${count()}</p>
+        <button @click=${() => count(count() + 1)}>Increment</button>
+      </div>
+    `
+  }
+}
+```
+
+---
+
+## Next Steps
+
+Now that you've got the basics down, you can explore:
+* **[Why alien-lit?](/guide/why)**: A deep dive into the performance benefits and architecture.
+* **[Performance Benchmark](/benchmark)**: View the live comparison between alien-lit, @lit-labs/signals, and standard Lit.
+* **[SignalWatcher Mixin](/reference/watcher)**: Learn about automatic, zero-boilerplate tracking.
+* **[SignalTrackingController](/reference/controller)**: Learn how to explicitly track dependencies outside of rendering.
