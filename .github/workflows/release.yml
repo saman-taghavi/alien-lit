@@ -11,6 +11,7 @@ permissions:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 jobs:
   release:
@@ -37,6 +38,9 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           cache: pnpm
 
+      - name: Configure NPM Token
+        run: echo "//registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}" >> .npmrc
+
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
@@ -49,16 +53,9 @@ jobs:
         run: pnpm run build
 
       - name: Bump Version & Update Changelog
+        run: npx changelogen@latest --release --push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          if [ -n "${NODE_AUTH_TOKEN}" ]; then
-            npm config set //registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}
-          fi
-          npx changelogen@latest --release --push
 
       - name: Publish to NPM
         run: pnpm publish --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
