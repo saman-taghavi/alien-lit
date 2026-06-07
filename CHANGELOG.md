@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.1.1
+
+[compare changes](https://github.com/saman-taghavi/alien-lit/compare/v1.1.0...v1.1.1)
+
+### 🏡 Chore
+
+- Fix CI publish auth, add license, upgrade actions to Node 24 ([30ee2cf](https://github.com/saman-taghavi/alien-lit/commit/30ee2cf))
+
+### ❤️ Contributors
+
+- Saman-taghavi <taghavisni@gmail.com>
+
 ## v1.1.0
 
 
