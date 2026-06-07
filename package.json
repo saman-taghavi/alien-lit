@@ -1,0 +1,50 @@
+{
+  "name": "alien-lit",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Fine-grained reactive state for Lit using alien-signals",
+  "author": "Saman <saman@example.com>",
+  "license": "MIT",
+  "keywords": [
+    "lit",
+    "lit-element",
+    "alien-signals",
+    "signals",
+    "reactive",
+    "state-management"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "pnpm build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "release": "bumpp -r"
+  },
+  "peerDependencies": {
+    "alien-signals": "^3.0.0",
+    "lit": "^2.0.0 || ^3.0.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^3.12.0",
+    "alien-signals": "^3.1.2",
+    "eslint": "^9.17.0",
+    "jsdom": "^26.0.0",
+    "lit": "^3.2.1",
+    "tsdown": "^0.22.2",
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.0"
+  }
+}
