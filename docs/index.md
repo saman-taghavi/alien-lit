@@ -11,7 +11,7 @@ hero:
       link: /guide/
     - theme: alt
       text: View on GitHub
-      link: https://github.com/your-username/alien-lit
+      link: https://github.com/saman-taghavi/alien-lit
 
 features:
   - icon: ⚡
