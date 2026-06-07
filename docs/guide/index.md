@@ -76,6 +76,6 @@ export class SimpleCounter extends SignalWatcher(LitElement) {
 
 Now that you've got the basics down, you can explore:
 * **[Why alien-lit?](/guide/why)**: A deep dive into the performance benefits and architecture.
-* **[Performance Benchmark](/benchmark)**: View the live comparison between alien-lit, @lit-labs/signals, and standard Lit.
+* **[Performance Benchmark](/benchmark)**: View the comparison between alien-lit, @lit-labs/signals, and standard Lit.
 * **[SignalWatcher Mixin](/reference/watcher)**: Learn about automatic, zero-boilerplate tracking.
 * **[SignalTrackingController](/reference/controller)**: Learn how to explicitly track dependencies outside of rendering.

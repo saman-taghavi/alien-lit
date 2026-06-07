@@ -1,21 +1,9 @@
 # Performance & Size Comparison
 
-Reactivity engines are only as useful as their rendering integrations. This page showcases a live performance and size comparison evaluating:
+Reactivity engines are only as useful as their rendering integrations. This page showcases a performance and size comparison evaluating:
 1. **`alien-lit`** (Fine-grained reactivity using `alien-signals`)
 2. **`@lit-labs/signals`** (Official Lit Labs signals integration using the TC39 signals proposal polyfill)
 3. **Standard Lit Element** (Component-wide updates)
-
----
-
-## ⚡ Live Benchmark
-
-Both `alien-lit` and `@lit-labs/signals` provide fine-grained reactivity, avoiding the bottleneck of standard Lit (re-rendering the entire parent component and evaluating templates for all 1,000 items).
-
-However, `alien-lit` goes a step further by leveraging **`alien-signals`**, which is optimized for minimal memory allocation and faster dependency resolution compared to the standard TC39 proposal polyfill used by `@lit-labs/signals`.
-
-<ClientOnly>
-  <showcase-benchmark></showcase-benchmark>
-</ClientOnly>
 
 ---
 
