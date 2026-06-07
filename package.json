@@ -31,7 +31,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
-    "release": "bumpp -r"
+    "release": "bumpp -r",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "peerDependencies": {
     "alien-signals": "^3.0.0",
@@ -45,6 +48,7 @@
     "lit": "^3.2.1",
     "tsdown": "^0.22.2",
     "typescript": "^5.7.2",
+    "vitepress": "^1.6.4",
     "vitest": "^3.0.0"
   }
 }
