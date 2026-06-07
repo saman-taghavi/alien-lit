@@ -1,7 +1,7 @@
 {
   "name": "alien-lit",
   "type": "module",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Fine-grained reactive state for Lit using alien-signals",
   "author": "Saman Taghavi (https://github.com/saman-taghavi)",
   "license": "MIT",

@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.1.2
+
+[compare changes](https://github.com/saman-taghavi/alien-lit/compare/v1.1.1...v1.1.2)
+
+### 🏡 Chore
+
+- Fix pnpm publish ENEEDAUTH by writing token to local .npmrc ([2d93885](https://github.com/saman-taghavi/alien-lit/commit/2d93885))
+
+### ❤️ Contributors
+
+- Saman-taghavi <taghavisni@gmail.com>
+
 ## v1.1.1
 
 [compare changes](https://github.com/saman-taghavi/alien-lit/compare/v1.1.0...v1.1.1)
