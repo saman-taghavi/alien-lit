@@ -1,7 +1,7 @@
 # alien-lit 👽⚡
 
 [![npm version](https://img.shields.io/npm/v/alien-lit.svg)](https://npmjs.org/package/alien-lit)
-[![license](https://img.shields.io/npm/l/alien-lit.svg)](https://github.com/your-username/alien-lit)
+[![license](https://img.shields.io/npm/l/alien-lit.svg)](https://github.com/saman-taghavi/alien-lit)
 
 Fine-grained reactive state for **Lit** powered by **alien-signals**.
 
