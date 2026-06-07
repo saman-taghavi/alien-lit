@@ -111,12 +111,14 @@ Integrating it with Lit allows you to:
 `alien-lit` is a high-performance, lightweight alternative to the official `@lit-labs/signals` package (which is built on the TC39 signals proposal polyfill).
 
 ### 1. Package Size comparison
-By leveraging the ultra-lightweight `alien-signals` library, `alien-lit` is **~4x smaller** in gzipped bundle size than the official `@lit-labs/signals` + `signal-polyfill` stack:
+By leveraging the ultra-lightweight `alien-signals` library, `alien-lit` is **~2.8x smaller** in gzipped bundle size than the official `@lit-labs/signals` + `signal-polyfill` stack (measured using `esbuild` and `gzip`):
 
-| Library + Dependency | Library Size (Min+Gzip) | Dependency Size (Min+Gzip) | Total Bundle Impact |
+| Library + Dependency | Minified Size | Gzipped Size | Total Footprint (Gzipped) |
 | :--- | :--- | :--- | :--- |
-| **`alien-lit`** + `alien-signals` | **0.65 KB** | **0.80 KB** | **~1.45 KB** 🚀 |
-| **`@lit-labs/signals`** + `signal-polyfill` | ~1.20 KB | ~4.50 KB | **~5.70 KB** |
+| **`alien-lit`** (our integration) | **0.73 KB** | **0.36 KB** | |
+| `alien-signals` (dependency) | 3.60 KB | 1.27 KB | **1.63 KB** 🚀 |
+| **`@lit-labs/signals`** (official) | 3.00 KB | 1.31 KB | |
+| `signal-polyfill` (dependency) | 10.00 KB | 3.21 KB | **4.52 KB** |
 
 ### 2. Syntax & Developer Experience
 `alien-lit` offers a clean, boilerplate-free functional API:
