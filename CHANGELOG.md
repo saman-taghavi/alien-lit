@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.1
+
+[compare changes](https://github.com/saman-taghavi/alien-lit/compare/v1.2.0...v1.2.1)
+
+### 📖 Documentation
+
+- **fr:** Fix grammar, register, and typography across French docs ([42879a5](https://github.com/saman-taghavi/alien-lit/commit/42879a5))
+
+### ❤️ Contributors
+
+- Saman-taghavi <taghavisni@gmail.com>
+
 ## v1.2.0
 
 [compare changes](https://github.com/saman-taghavi/alien-lit/compare/v1.1.5...v1.2.0)
