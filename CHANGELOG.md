@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.1.5
+
+[compare changes](https://github.com/saman-taghavi/alien-lit/compare/v1.1.4...v1.1.5)
+
+### 📖 Documentation
+
+- Add OG image, SEO meta, sitemap, and AI agent skill ([3cfaae1](https://github.com/saman-taghavi/alien-lit/commit/3cfaae1))
+
+### ❤️ Contributors
+
+- Saman-taghavi <taghavisni@gmail.com>
+
 ## v1.1.4
 
 [compare changes](https://github.com/saman-taghavi/alien-lit/compare/v1.1.3...v1.1.4)
