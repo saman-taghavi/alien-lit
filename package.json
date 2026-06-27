@@ -2,7 +2,7 @@
   "name": "alien-lit",
   "type": "module",
   "version": "1.1.4",
-  "description": "Fine-grained reactive state for Lit using alien-signals",
+  "description": "Fine-grained reactive state for Lit using alien-signals. Ultra-lightweight, zero-boilerplate reactivity for Lit web components.",
   "author": "Saman Taghavi (https://github.com/saman-taghavi)",
   "license": "MIT",
   "repository": {
@@ -16,8 +16,22 @@
     "alien-signals",
     "signals",
     "reactive",
-    "state-management"
+    "state-management",
+    "web-components",
+    "fine-grained",
+    "reactivity",
+    "lightweight",
+    "typescript",
+    "performance"
   ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/saman-taghavi"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.mts",
@@ -28,7 +42,8 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "files": [
-    "dist"
+    "dist",
+    "skills"
   ],
   "scripts": {
     "build": "tsdown",
@@ -39,7 +54,7 @@
     "changelog": "changelogen",
     "release": "changelogen --release --push",
     "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
+    "docs:build": "node scripts/generate-og-image.mjs && vitepress build docs && node scripts/generate-sitemap.mjs",
     "docs:preview": "vitepress preview docs"
   },
   "peerDependencies": {
@@ -54,6 +69,7 @@
     "eslint": "^9.17.0",
     "jsdom": "^26.0.0",
     "lit": "^3.2.1",
+    "sharp": "^0.35.2",
     "tsdown": "^0.22.2",
     "typescript": "^5.7.2",
     "vitepress": "^1.6.4",
