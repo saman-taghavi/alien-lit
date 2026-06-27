@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.0
+
+[compare changes](https://github.com/saman-taghavi/alien-lit/compare/v1.1.5...v1.2.0)
+
+### 🚀 Enhancements
+
+- **docs:** Add French i18n, fix title rendering, update OG tags ([d64e570](https://github.com/saman-taghavi/alien-lit/commit/d64e570))
+
+### ❤️ Contributors
+
+- Saman-taghavi <taghavisni@gmail.com>
+
 ## v1.1.5
 
 [compare changes](https://github.com/saman-taghavi/alien-lit/compare/v1.1.4...v1.1.5)
