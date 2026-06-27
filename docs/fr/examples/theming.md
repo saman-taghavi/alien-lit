@@ -85,7 +85,7 @@ export class ThemeBodySync extends LitElement {
   })
 
   override render() {
-    return html`<p>Synchronisation du thème actif sur le body...</p>`
+    return html`<p>Synchronisation du thème actif appliquée au body...</p>`
   }
 }
 ```

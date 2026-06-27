@@ -9,15 +9,15 @@ Elle permet une réactivité à grain fin : vos composants s'abonnent automatiqu
 ## Le Problème
 
 Dans un composant Lit traditionnel :
-1. **Ré-affichage complet du composant** : Modifier une propriété force la réévaluation de l'ensemble du template, même si seul un petit nœud du DOM a changé.
-2. **Partage d'état** : Partager un état entre composants nécessite souvent des événements, des contextes globaux ou des gestionnaires d'état lourds qui encombrent le code.
+1. **Rendu complet du composant** : Modifier une propriété force la réévaluation de l'ensemble du template, même si seul un petit nœud du DOM a changé.
+2. **Partage d'état** : Partager un état entre composants est complexe : cela nécessite des événements, des contextes globaux ou des gestionnaires d'état lourds.
 
 ## La Solution
 
 `alien-lit` extrait votre état dans des primitives réactives indépendantes et hautement optimisées appelées **Signaux**. Les composants lisent ces signaux pendant leur phase de rendu, s'abonnant automatiquement aux mises à jour. Quand un signal est modifié :
-* La souscription est déclenchée.
+* Le signal notifie ses observateurs.
 * Une mise à jour est planifiée.
-* **Seuls** les composants affectés sont ré-affichés.
+* **Seuls** les composants affectés sont mis à jour.
 
 ---
 
@@ -45,7 +45,7 @@ yarn add alien-lit alien-signals lit
 
 ## Démarrage Rapide (Zéro Boilerplate)
 
-La façon la plus simple d'utiliser `alien-lit` est avec le mixin `SignalWatcher`. Tout signal lu pendant le cycle de rendu synchrone est automatiquement traqué, et le cycle de vie est géré pour vous.
+La façon la plus simple d'utiliser `alien-lit` est avec le mixin `SignalWatcher`. Tout signal lu pendant le cycle de rendu synchrone est automatiquement suivi, et le cycle de vie est géré pour vous.
 
 ```typescript
 import { signal } from 'alien-signals'

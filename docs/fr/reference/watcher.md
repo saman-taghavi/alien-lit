@@ -19,10 +19,10 @@ export function SignalWatcher<T extends Constructor<ReactiveElement>>(Base: T): 
 
 ## Fonctionnement (Sous le Capot)
 
-Le mixin enveloppe le processus de mise à jour interne de Lit en s'accrochant à trois méthodes de cycle de vie principales :
+Le mixin enveloppe le processus de mise à jour interne de Lit en interceptant trois méthodes de cycle de vie principales :
 
 1. **`performUpdate()`** :
-   Quand Lit planifie une mise à jour, `SignalWatcher` intercepte l'appel et exécute `super.performUpdate()` à l'intérieur d'un `effect` d'`alien-signals`. Tout signal accédé pendant l'exécution synchrone de votre méthode `render()` est automatiquement enregistré comme dépendance.
+   Quand Lit planifie une mise à jour, `SignalWatcher` intercepte l'appel et exécute `super.performUpdate()` à l'intérieur d'un `effect` d'`alien-signals`. Tout signal lu lors de l'exécution synchrone de `render()` est automatiquement enregistré comme dépendance.
 2. **`requestUpdate()`** :
    Si l'un des signaux traqués mute ultérieurement, le callback de l'effet est déclenché, ce qui planifie automatiquement une nouvelle mise à jour sur l'élément Lit.
 3. **`connectedCallback()` & `disconnectedCallback()`** :
@@ -61,7 +61,7 @@ export class UserProfile extends SignalWatcher(LitElement) {
 ## Bonnes Pratiques
 
 ::: warning ⚠️ Évitez les Boucles de Mise à Jour Infinies
-N'écrivez **pas** et ne muez **pas** les signaux à l'intérieur de `render()`, `willUpdate()`, `update()` ou d'autres méthodes de cycle de vie synchrones. Cela muterait les dépendances que le cycle de rendu est en train de traquer, entraînant une boucle de ré-affichage infinie.
+N'écrivez **pas** et ne mutez **pas** les signaux à l'intérieur de `render()`, `willUpdate()`, `update()` ou d'autres méthodes de cycle de vie synchrones. Cela muterait les dépendances que le cycle de rendu est en train de traquer, entraînant une boucle de ré-affichage infinie.
 :::
 
 ::: tip Gardez le Rendu Pur

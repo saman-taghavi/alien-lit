@@ -1,6 +1,6 @@
 # Comparaison Performance & Taille
 
-Les moteurs de réactivité ne sont utiles que dans la mesure de leurs intégrations de rendu. Cette page présente une comparaison des performances et de la taille évaluant :
+Les moteurs de réactivité ne sont utiles que dans la mesure de leurs intégrations de rendu. Cette page présente une comparaison des performances et de la taille évaluant les trois approches suivantes :
 1. **`alien-lit`** (Réactivité à grain fin avec `alien-signals`)
 2. **`@lit-labs/signals`** (Intégration officielle Lit Labs utilisant le polyfill TC39)
 3. **Lit Element Standard** (Mises à jour au niveau du composant)
@@ -21,13 +21,13 @@ Voici une comparaison vérifiée des deux approches (mesurée avec `esbuild` et 
 | `signal-polyfill` (dépendance) | 10,00 KB | 3,21 KB | **4,52 KB** |
 
 > [!TIP]
-> `alien-lit` (incluant le moteur `alien-signals`) est **~2,8x plus petit** en taille gzippée que `@lit-labs/signals` (avec `signal-polyfill`).
+> `alien-lit` (incluant le moteur `alien-signals`) est **environ 2,8 × plus petit** en taille gzippée que `@lit-labs/signals` (avec `signal-polyfill`).
 
 ---
 
 ## 🛠️ Syntaxe & Expérience Développeur
 
-`alien-lit` offre une expérience propre et sans boilerplate. Voici une comparaison côte à côte :
+`alien-lit` offre une expérience propre et sans code passe-partout. Voici une comparaison côte à côte :
 
 ### 1. Déclarer un Signal
 * **`alien-lit`** : `const count = signal(0)`
@@ -65,4 +65,4 @@ Voici une comparaison vérifiée des deux approches (mesurée avec `esbuild` et 
   ```
 
 ### Résumé
-`alien-lit` offre une expérience **aussi facile, sinon plus, à utiliser** que `@lit-labs/signals`, tout en étant beaucoup plus léger et significativement plus rapide. Il évite les parseurs de template personnalisés et exploite l'invocation de fonction standard pour lire/écrire l'état.
+`alien-lit` offre une expérience **aussi facile, sinon plus, à utiliser** que `@lit-labs/signals`, tout en restant plus léger et plus rapide. Il évite les parseurs de template personnalisés et exploite l'invocation de fonction standard pour lire/écrire l'état.

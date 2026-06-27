@@ -88,7 +88,7 @@ export class LocalCounter extends SignalWatcher(LitElement) {
 ## Aperçus Interactifs
 
 ### 1. Compteur Global Partagé
-Les composants d'affichage et les moteurs de rendu personnalisés écoutant le signal global `count` se mettront à jour de façon réactive et synchrone en temps réel quand vous cliquerez ci-dessous :
+Les composants observant le signal global `count` se mettront à jour immédiatement quand vous cliquerez ci-dessous :
 
 <ClientOnly>
   <showcase-watcher-counter></showcase-watcher-counter>

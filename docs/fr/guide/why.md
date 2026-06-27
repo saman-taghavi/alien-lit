@@ -8,18 +8,18 @@ Pour construire des applications web évolutives et réactives, vous avez besoin
 
 Traditionnellement, Lit repose sur un modèle **push** :
 * Une propriété est modifiée → le composant est marqué comme sale → l'intégralité du template est planifié pour ré-affichage.
-* Si un parent transmet des données, tous les composants enfants évaluent leurs templates, même si la valeur qui les concerne n'a pas changé.
+* Si un parent transmet des données, tous les enfants réévaluent leurs templates — même si leurs valeurs pertinentes n'ont pas changé.
 
 `alien-lit` introduit un modèle réactif à grain fin basé sur les signaux, de type **pull** :
-* **Calcul Paresseux** : Les valeurs calculées ne sont réévaluées que lorsqu'elles sont lues et que leurs dépendances ont changé.
-* **Souscriptions Granulaires** : Les souscriptions sont liées à des instances de composants individuelles. Seuls les composants qui lisent réellement le signal mis à jour sont notifiés.
+* **Calcul Paresseux** : Les valeurs calculées ne sont réévaluées que lorsqu'elles sont lues et que leurs dépendances changent.
+* **Abonnements Granulaires** : Les abonnements sont liés à des instances de composants individuelles. Seuls les composants qui lisent réellement le signal mis à jour sont notifiés.
 
 ---
 
 ## ⚡ Le Moteur alien-signals
 
 `alien-signals` est une bibliothèque de réactivité à la pointe de la technologie, conçue pour une vitesse extrême et une empreinte mémoire minimale :
-1. **Traçage de Dépendances O(1)** : Elle maintient un graphe réactif extrêmement rapide qui résout les changements avec un surcoût minimal.
+1. **Traçage des Dépendances en O(1)** : Elle maintient un graphe réactif extrêmement rapide qui propage les changements avec un surcoût minimal.
 2. **Faibles Allocations Mémoire** : Elle évite les instanciations lourdes d'objets pendant les cycles de traçage, minimisant les pauses du ramasse-miettes (GC).
 3. **Benchmarks** : Dans les benchmarks de réactivité brute, elle surpasse constamment les autres implémentations de signaux, ce qui en fait l'intégration la plus rapide pour les composants web.
 
@@ -42,4 +42,4 @@ La gestion manuelle des événements et des souscriptions dans les composants we
 `alien-lit` gère cela automatiquement :
 * Quand un composant est connecté au DOM, il met en place son contexte de traçage.
 * Quand un composant est déconnecté, il libère immédiatement ses effets réactifs et se désabonne de tous les signaux.
-* Si le composant est reconnecté plus tard, il re-traque les dépendances lors de son prochain rendu automatiquement.
+* Si le composant est reconnecté plus tard, il observe à nouveau ses dépendances lors de son prochain rendu automatiquement.

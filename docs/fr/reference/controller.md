@@ -1,6 +1,6 @@
 # SignalTrackingController
 
-Un `ReactiveController` Lit qui permet de traquer explicitement des signaux spécifiques et de déclencher des mises à jour sur le composant hôte lorsque ces signaux muent.
+Un `ReactiveController` Lit qui permet de suivre explicitement des signaux spécifiques et de déclencher des mises à jour sur le composant hôte lorsque ces signaux muent.
 
 ---
 
@@ -52,7 +52,7 @@ const userRole = signal('invité')
 
 @customElement('admin-panel')
 export class AdminPanel extends LitElement {
-  // Abonnement explicite aux changements du signal 'userRole'
+  // Abonnement explicite aux changements du signal `userRole`
   private roleTracker = new SignalTrackingController(this, () => {
     userRole() // L'accès au signal l'enregistre comme dépendance
   })

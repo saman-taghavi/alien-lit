@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: "alien-lit"
-  text: "Réactivité, téléportée vers Lit"
+  text: "Réactivité portée vers Lit"
   tagline: Une intégration réactive hyper-performante et sans surcoût pour les composants Lit, propulsée par alien-signals 👽⚡
   actions:
     - theme: brand
@@ -27,6 +27,6 @@ features:
     title: Empreinte Microscopique
     details: L'empreinte combinée d'alien-lit + alien-signals est inférieure à ~1,6 KB gzippé. Conçu spécialement pour les systèmes de design légers et les micro-frontends.
   - icon: 🛠️
-    title: API Progressives
+    title: APIs Progressives
     details: Commencez avec le mixin automatique SignalWatcher pour une réactivité sans effort, ou passez au SignalTrackingController pour des dépendances explicites.
 ---
